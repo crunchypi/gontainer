@@ -18,11 +18,20 @@ type Putter[K comparable, V any] interface {
 }
 ```
 
+#### Getter
+```go
+// Getter represents someting which gets a stored value.
+type Getter[K comparable, V any] interface {
+	Get(ctx context.Context, key K) (val V, err error)
+}
+```
+
 
 
 ## Errors
 ```go
 var ErrPut = errors.New("gontainer: failed put")
+var ErrGet = errors.New("gontainer: failed get")
 
 // See the next section.
 var ErrImpl = errors.New("gontainer: used interface without an implementation")
@@ -44,4 +53,16 @@ type PutterImpl[K comparable, V any] struct {
 
 // Put implements Putter by forwarding the call to the internal "Impl".
 func (impl PutterImpl[K, V]) Put(ctx context.Context, key K, val V) (err error)
+```
+
+#### Impl for Getter.
+```go
+// GetterImpl lets you implement Getter with a function. The call to Get is
+// simply forwarded to the internal function "Impl".
+type GetterImpl[K comparable, V any] struct {
+	Impl func(ctx context.Context, key K) (val V, err error,)
+}
+
+// Get implements Getter by forwarding the call to the internal "Impl".
+func (impl GetterImpl[K, V]) Get(ctx context.Context, key K) (val V, err error)
 ```
