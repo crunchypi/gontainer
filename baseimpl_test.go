@@ -68,3 +68,24 @@ func TestGetterImplWithNil(t *testing.T) {
 	_, have := g.Get(nil, 0)
 	assertEq("err", want, have, func(s string) { t.Fatal(s) })
 }
+
+// -----------------------------------------------------------------------------
+// Tests for ModifierImpl.
+// -----------------------------------------------------------------------------
+
+func TestModifierImplIdeal(t *testing.T) {
+	m := ModifierImpl[int, int]{}
+	m.Impl = func(context.Context, int, func(int) int) error { return nil }
+
+	want := *new(error)
+	have := m.Mod(nil, 0, nil)
+	assertEq("err", want, have, func(s string) { t.Fatal(s) })
+}
+
+func TestModifierImplWithNil(t *testing.T) {
+	m := ModifierImpl[int, int]{}
+
+	want := ErrMod
+	have := m.Mod(nil, 0, nil)
+	assertEq("err", want, have, func(s string) { t.Fatal(s) })
+}
