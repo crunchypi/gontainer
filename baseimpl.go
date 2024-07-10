@@ -102,3 +102,35 @@ func (impl ModifierImpl[K, V]) Mod(
 
 	return impl.Impl(ctx, key, rcv)
 }
+
+// -----------------------------------------------------------------------------
+// Impl for Deleter.
+// -----------------------------------------------------------------------------
+
+// DeleterImpl lets you implement Deleter with a function. The call to Del is
+// simply forwarded to the internal function "Impl".
+type DeleterImpl[K comparable, V any] struct {
+	Impl func(
+		ctx context.Context,
+		key K,
+	) (
+		val V,
+		err error,
+	)
+}
+
+// Del implements Deleter by forwarding the call to the internal "Impl".
+func (impl DeleterImpl[K, V]) Del(
+	ctx context.Context,
+	key K,
+) (
+	val V,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, key)
+}
