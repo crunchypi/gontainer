@@ -42,6 +42,21 @@ type Deleter[K comparable, V any] interface {
 }
 ```
 
+#### Container
+```go
+// Container groups Putter, Getter, Modifier and Deleter. Additionally, it
+// also defines the expectation of Len and Cap.
+type Container[K comparable, V any] interface {
+	Putter[K, V]
+	Getter[K, V]
+	Modifier[K, V]
+	Deleter[K, V]
+
+	Len(context.Context) (int, error)
+	Cap(context.Context) (int, error)
+}
+```
+
 
 
 ## Errors
@@ -107,4 +122,26 @@ type DeleterImpl[K comparable, V any] struct {
 
 // Del implements Deleter by forwarding the call to the internal "Impl".
 func (impl DeleterImpl[K, V]) Del(ctx context.Context, key K) (val V, err error)
+```
+
+#### Impl for Container.
+```go
+// ContainerImpl lets you implement Container with functions. It groups
+// PutterImpl, GetterImpl, ModifierImpl and DeleterImpl, so docs for those may
+// be useful to read. Also, similarly you may implement the Len and Cap func.
+type ContainerImpl[K comparable, V any] struct {
+	PutterImpl[K, V]
+	GetterImpl[K, V]
+	ModifierImpl[K, V]
+	DeleterImpl[K, V]
+
+	ImplLen func(ctx context.Context) (int, error)
+	ImplCap func(ctx context.Context) (int, error)
+}
+
+// Len implements Container.Len by forwarding the call to the internal "ImplLen".
+func (impl ContainerImpl[K, V]) Len(ctx context.Context) (n int, err error)
+
+// Cap implements Container.Cap by forwarding the call to the internal "ImplCap".
+func (impl ContainerImpl[K, V]) Cap(ctx context.Context) (n int, err error)
 ```

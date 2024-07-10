@@ -29,3 +29,15 @@ type Modifier[K comparable, V any] interface {
 type Deleter[K comparable, V any] interface {
 	Del(ctx context.Context, key K) (val V, err error)
 }
+
+// Container groups Putter, Getter, Modifier and Deleter. Additionally, it
+// also defines the expectation of Len and Cap.
+type Container[K comparable, V any] interface {
+	Putter[K, V]
+	Getter[K, V]
+	Modifier[K, V]
+	Deleter[K, V]
+
+	Len(context.Context) (int, error)
+	Cap(context.Context) (int, error)
+}
