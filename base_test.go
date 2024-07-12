@@ -28,3 +28,36 @@ func TestNewGet(t *testing.T) {
 	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
 	assertEq("val", 1, val, func(s string) { t.Fatal(s) })
 }
+
+func TestNewMod(t *testing.T) {
+	cnt := New[int, int]()
+	err := *new(error)
+	val := 0
+
+	// First mod should upsert, in this case the zero-value + 1.
+	err = cnt.Mod(nil, 1, func(v int) int { return v + 1 })
+	assertEq("err", ErrMod, err, func(s string) { t.Fatal(s) })
+
+	// Validate that the value is there.
+	val, err = cnt.Get(nil, 1)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("val", 1, val, func(s string) { t.Fatal(s) })
+
+	// Mod again by incrementing the first value.
+	err = cnt.Mod(nil, 1, func(v int) int { return v + 1 })
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+
+	// Get again, validate the increment.
+	val, err = cnt.Get(nil, 1)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("val", 2, val, func(s string) { t.Fatal(s) })
+
+	// Mod with nil func.
+	err = cnt.Mod(nil, 1, nil)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+
+	// Get to validate that nothing has changed with the key.
+	val, err = cnt.Get(nil, 1)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("val", 2, val, func(s string) { t.Fatal(s) })
+}

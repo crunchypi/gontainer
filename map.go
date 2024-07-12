@@ -20,8 +20,18 @@ func (m mapWrap[K, V]) Get(ctx context.Context, k K) (v V, err error) {
 	return
 }
 
+// Mod implements Modifier. Note, will still do a write if "k" is not found.
 func (m mapWrap[K, V]) Mod(ctx context.Context, k K, f func(V) V) (err error) {
-	err = ErrImpl
+	if f == nil {
+		return
+	}
+
+	v, ok := m[k]
+	if !ok {
+		err = ErrMod
+	}
+
+	m[k] = f(v)
 	return
 }
 
