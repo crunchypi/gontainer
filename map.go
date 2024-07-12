@@ -10,8 +10,13 @@ func (m mapWrap[K, V]) Put(ctx context.Context, k K, v V) (err error) {
 	return
 }
 
+// Get implements Getter.
 func (m mapWrap[K, V]) Get(ctx context.Context, k K) (v V, err error) {
-	err = ErrImpl
+	v, ok := m[k]
+	if !ok {
+		err = ErrGet
+	}
+
 	return
 }
 
