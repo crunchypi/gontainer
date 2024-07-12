@@ -4,8 +4,9 @@ import "context"
 
 type mapWrap[K comparable, V any] map[K]V
 
+// Put implements Putter.
 func (m mapWrap[K, V]) Put(ctx context.Context, k K, v V) (err error) {
-	err = ErrImpl
+	m[k] = v
 	return
 }
 
