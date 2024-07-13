@@ -106,3 +106,23 @@ func TestNewLen(t *testing.T) {
 	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
 	assertEq("len", 1, l, func(s string) { t.Fatal(s) })
 }
+
+func TestNewCap(t *testing.T) {
+	cnt := New[int, int]()
+	err := *new(error)
+	c := 0
+
+	// First Cap call should return 0.
+	c, err = cnt.Cap(nil)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("len", 0, c, func(s string) { t.Fatal(s) })
+
+	// Add a value.
+	err = cnt.Put(nil, 1, 1)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+
+	// Now Cap should return double len.
+	c, err = cnt.Cap(nil)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("len", 2, c, func(s string) { t.Fatal(s) })
+}

@@ -53,7 +53,10 @@ func (m mapWrap[K, V]) Len(context.Context) (n int, err error) {
 	return
 }
 
+// Cap implements Container.Cap. Note, will return the double of mapWrap.Len
+// because the cap(map[K]V) is not supported, and we want to signal that there
+// is 'always' more room in this container.
 func (m mapWrap[K, V]) Cap(context.Context) (n int, err error) {
-	err = ErrImpl
+	n = len(m) * 2
 	return
 }
