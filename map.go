@@ -47,8 +47,9 @@ func (m mapWrap[K, V]) Del(ctx context.Context, k K) (v V, err error) {
 	return
 }
 
+// Len implements Container.Len.
 func (m mapWrap[K, V]) Len(context.Context) (n int, err error) {
-	err = ErrImpl
+	n = len(m)
 	return
 }
 

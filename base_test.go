@@ -86,3 +86,23 @@ func TestNewDel(t *testing.T) {
 	assertEq("err", ErrGet, err, func(s string) { t.Fatal(s) })
 	assertEq("val", 0, val, func(s string) { t.Fatal(s) })
 }
+
+func TestNewLen(t *testing.T) {
+	cnt := New[int, int]()
+	err := *new(error)
+	l := 0
+
+	// First Len call should return 0.
+	l, err = cnt.Len(nil)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("len", 0, l, func(s string) { t.Fatal(s) })
+
+	// Add a value.
+	err = cnt.Put(nil, 1, 1)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+
+	// Now Len should return 1.
+	l, err = cnt.Len(nil)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("len", 1, l, func(s string) { t.Fatal(s) })
+}
