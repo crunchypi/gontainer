@@ -5,6 +5,7 @@ Index
 - [Core interfaces](#core-interfaces)
 - [Errors](#errors)
 - [Impl pattern](#impl-pattern)
+- [Default](#default)
 
 
 
@@ -144,4 +145,16 @@ func (impl ContainerImpl[K, V]) Len(ctx context.Context) (n int, err error)
 
 // Cap implements Container.Cap by forwarding the call to the internal "ImplCap".
 func (impl ContainerImpl[K, V]) Cap(ctx context.Context) (n int, err error)
+```
+
+
+## Default
+A default container is implemented and has the signature noted below. It is mainly intended for prototyping and testing, and is implemented as a `map[K]V`wrapped by the `Container` interface. The underlying implementation may be swapped in the future but the signature and behavior will most likely not.
+
+Some notes:
+- As `cap(map[K]V)` is not supported by the language, a call to `Cap` returns `Len` * 2
+- `Mod`will run the callback and save the result even if the key does not exist.
+
+```go
+func New[K comparable, V any]() Container[K, V]
 ```
