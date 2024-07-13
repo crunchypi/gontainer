@@ -61,3 +61,28 @@ func TestNewMod(t *testing.T) {
 	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
 	assertEq("val", 2, val, func(s string) { t.Fatal(s) })
 }
+
+func TestNewDel(t *testing.T) {
+	cnt := New[int, int]()
+	err := *new(error)
+	val := 0
+
+	// First Del should return an err since nothing was deleted.
+	val, err = cnt.Del(nil, 1)
+	assertEq("err", ErrDel, err, func(s string) { t.Fatal(s) })
+	assertEq("val", 0, val, func(s string) { t.Fatal(s) })
+
+	// Add a value.
+	err = cnt.Put(nil, 1, 1)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+
+	// Now Del should return the added value.
+	val, err = cnt.Del(nil, 1)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("val", 1, val, func(s string) { t.Fatal(s) })
+
+	// Validate that the value was deleted.
+	val, err = cnt.Get(nil, 1)
+	assertEq("err", ErrGet, err, func(s string) { t.Fatal(s) })
+	assertEq("val", 0, val, func(s string) { t.Fatal(s) })
+}

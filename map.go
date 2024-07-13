@@ -35,8 +35,15 @@ func (m mapWrap[K, V]) Mod(ctx context.Context, k K, f func(V) V) (err error) {
 	return
 }
 
+// Del implements Deleter.
 func (m mapWrap[K, V]) Del(ctx context.Context, k K) (v V, err error) {
-	err = ErrImpl
+	v, ok := m[k]
+	if !ok {
+		err = ErrDel
+		return
+	}
+
+	delete(m, k)
 	return
 }
 
