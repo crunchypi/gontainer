@@ -148,3 +148,23 @@ func TestContainerImplCapWithErr(t *testing.T) {
 	_, have := c.Cap(nil)
 	assertEq("err", want, have, func(s string) { t.Fatal(s) })
 }
+
+// -----------------------------------------------------------------------------
+// Tests for SearcherImpl.
+// -----------------------------------------------------------------------------
+
+func TestSearcherImplIdeal(t *testing.T) {
+	s := SearcherImpl[int, int]{}
+	s.Impl = func(_ context.Context, _ int) (r int, err error) { return }
+
+	val, err := s.Search(nil, 0)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("val", 0, val, func(s string) { t.Fatal(s) })
+}
+
+func TestSearcherImplWithNil(t *testing.T) {
+	s := SearcherImpl[int, int]{}
+
+	_, err := s.Search(nil, 0)
+	assertEq("err", ErrImpl, err, func(s string) { t.Fatal(s) })
+}

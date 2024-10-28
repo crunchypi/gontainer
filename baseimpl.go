@@ -181,3 +181,29 @@ func (impl ContainerImpl[K, V]) Cap(
 
 	return impl.ImplCap(ctx)
 }
+
+// -----------------------------------------------------------------------------
+// Impl for Searcher
+// -----------------------------------------------------------------------------
+
+// SearcherImpl lets you implement Searcher with a function. The call to Search
+// is simply forwarded to the internal function "Impl".
+type SearcherImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (r R, err error)
+}
+
+// Search implements Searcher.Search by forwarding the call to the internal "Impl".
+func (impl SearcherImpl[Q, R]) Search(
+	ctx context.Context,
+	filter Q,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter)
+}
