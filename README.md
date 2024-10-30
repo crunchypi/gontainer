@@ -58,8 +58,6 @@ type Container[K comparable, V any] interface {
 }
 ```
 
-
-
 #### Searcher
 ```go
 // Searcher represents something which searches for a value using a filter.
@@ -68,6 +66,13 @@ type Searcher[Q, R any] interface {
 }
 ```
 
+#### SearchUpdater
+```go
+// SearchUpdater represents something which searches and updates items.
+type SearchUpdater[Q, U, R any] interface {
+	SearchUpdate(ctx context.Context, filter Q, update U) (r R, err error)
+}
+```
 
 
 ## Errors
@@ -78,6 +83,7 @@ var ErrMod = errors.New("gontainer: failed mod")
 var ErrDel = errors.New("gontainer: failed del")
 
 var ErrSearchFinder = errors.New("gontainer: failed search")
+var ErrSearchUpdater = errors.New("gontainer: failed search & update")
 
 // See the next section.
 var ErrImpl = errors.New("gontainer: used interface without an implementation")
@@ -171,6 +177,17 @@ type SearcherImpl[Q, R any] struct {
 func (impl SearcherImpl[Q, R]) Search(ctx context.Context, filter Q) R, error) 
 ```
 
+#### Impl for SearchUpdater
+```go
+// SearchUpdaterImpl lets you implement SearchUpdater with a function. The call
+// to SearchUpdate is simply forwarded to the internal function "Impl".
+type SearchUpdaterImpl[Q, U, R any] struct {
+	Impl func(ctx context.Context, filter Q, update U) (r R, err error)
+}
+
+// SearchUpdate implements SearchUpdater by forwarding to the internal "Impl".
+func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(ctx context.Context, filter Q, update U,) (r R, err error) 
+```
 
 
 ## Default

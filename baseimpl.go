@@ -207,3 +207,30 @@ func (impl SearcherImpl[Q, R]) Search(
 
 	return impl.Impl(ctx, filter)
 }
+
+// -----------------------------------------------------------------------------
+// Impl for SearchUpdater
+// -----------------------------------------------------------------------------
+
+// SearchUpdaterImpl lets you implement SearchUpdater with a function. The call
+// to SearchUpdate is simply forwarded to the internal function "Impl".
+type SearchUpdaterImpl[Q, U, R any] struct {
+	Impl func(ctx context.Context, filter Q, update U) (r R, err error)
+}
+
+// SearchUpdate implements SearchUpdater by forwarding to the internal "Impl".
+func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(
+	ctx context.Context,
+	filter Q,
+	update U,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter, update)
+}

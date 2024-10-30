@@ -11,6 +11,7 @@ var ErrMod = errors.New("gontainer: failed mod")
 var ErrDel = errors.New("gontainer: failed del")
 
 var ErrSearchFinder = errors.New("gontainer: failed search")
+var ErrSearchUpdater = errors.New("gontainer: failed search & update")
 
 // Putter represents something which stores a value.
 type Putter[K comparable, V any] interface {
@@ -52,4 +53,9 @@ func New[K comparable, V any]() Container[K, V] {
 // Searcher represents something which searches for a value using a filter.
 type Searcher[Q, R any] interface {
 	Search(ctx context.Context, filter Q) (r R, err error)
+}
+
+// SearchUpdater represents something which searches and updates items.
+type SearchUpdater[Q, U, R any] interface {
+	SearchUpdate(ctx context.Context, filter Q, update U) (r R, err error)
 }
