@@ -12,6 +12,7 @@ var ErrDel = errors.New("gontainer: failed del")
 
 var ErrSearchFinder = errors.New("gontainer: failed search")
 var ErrSearchUpdater = errors.New("gontainer: failed search & update")
+var ErrSearchDeleter = errors.New("gontainer: failed search & update")
 
 // Putter represents something which stores a value.
 type Putter[K comparable, V any] interface {
@@ -58,4 +59,9 @@ type Searcher[Q, R any] interface {
 // SearchUpdater represents something which searches and updates items.
 type SearchUpdater[Q, U, R any] interface {
 	SearchUpdate(ctx context.Context, filter Q, update U) (r R, err error)
+}
+
+// SearchDeleter represents something which searches and deletes items.
+type SearchDeleter[Q, R any] interface {
+	SearchDelete(ctx context.Context, filter Q) (r R, err error)
 }

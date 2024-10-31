@@ -234,3 +234,29 @@ func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(
 
 	return impl.Impl(ctx, filter, update)
 }
+
+// -----------------------------------------------------------------------------
+// Impl for SearchDeleter
+// -----------------------------------------------------------------------------
+
+// SearchDeleterImpl lets you implement SearchDeleter with a function. The call
+// to SearchDelete is simply forwarded to the internal function "Impl".
+type SearchDeleterImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (q R, err error)
+}
+
+// SearchDelete implements SearchDeleter by forwarding to the internal "Impl".
+func (impl SearchDeleterImpl[Q, R]) SearchDelete(
+	ctx context.Context,
+	filter Q,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter)
+}
