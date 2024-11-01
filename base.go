@@ -10,6 +10,10 @@ var ErrGet = errors.New("gontainer: failed get")
 var ErrMod = errors.New("gontainer: failed mod")
 var ErrDel = errors.New("gontainer: failed del")
 
+var ErrSearchFinder = errors.New("gontainer: failed search")
+var ErrSearchUpdater = errors.New("gontainer: failed search & update")
+var ErrSearchDeleter = errors.New("gontainer: failed search & update")
+
 // Putter represents something which stores a value.
 type Putter[K comparable, V any] interface {
 	Put(ctx context.Context, key K, val V) (err error)
@@ -45,4 +49,19 @@ type Container[K comparable, V any] interface {
 // New returns a in-memory container, intended for prototyping and testing.
 func New[K comparable, V any]() Container[K, V] {
 	return make(mapWrap[K, V])
+}
+
+// Searcher represents something which searches for a value using a filter.
+type Searcher[Q, R any] interface {
+	Search(ctx context.Context, filter Q) (r R, err error)
+}
+
+// SearchUpdater represents something which searches and updates items.
+type SearchUpdater[Q, U, R any] interface {
+	SearchUpdate(ctx context.Context, filter Q, update U) (r R, err error)
+}
+
+// SearchDeleter represents something which searches and deletes items.
+type SearchDeleter[Q, R any] interface {
+	SearchDelete(ctx context.Context, filter Q) (r R, err error)
 }

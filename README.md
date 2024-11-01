@@ -58,6 +58,30 @@ type Container[K comparable, V any] interface {
 }
 ```
 
+#### Searcher
+```go
+// Searcher represents something which searches for a value using a filter.
+type Searcher[Q, R any] interface {
+	Search(ctx context.Context, filter Q) (r R, err error)
+}
+```
+
+#### SearchUpdater
+```go
+// SearchUpdater represents something which searches and updates items.
+type SearchUpdater[Q, U, R any] interface {
+	SearchUpdate(ctx context.Context, filter Q, update U) (r R, err error)
+}
+```
+
+#### SearchDeleter
+
+```go
+// SearchDeleter represents something which searches and deletes items.
+type SearchDeleter[Q, R any] interface {
+	SearchDelete(ctx context.Context, filter Q) (r R, err error)
+}
+```
 
 
 ## Errors
@@ -66,6 +90,10 @@ var ErrPut = errors.New("gontainer: failed put")
 var ErrGet = errors.New("gontainer: failed get")
 var ErrMod = errors.New("gontainer: failed mod")
 var ErrDel = errors.New("gontainer: failed del")
+
+var ErrSearchFinder = errors.New("gontainer: failed search")
+var ErrSearchUpdater = errors.New("gontainer: failed search & update")
+var ErrSearchDeleter = errors.New("gontainer: failed search & update")
 
 // See the next section.
 var ErrImpl = errors.New("gontainer: used interface without an implementation")
@@ -145,6 +173,42 @@ func (impl ContainerImpl[K, V]) Len(ctx context.Context) (n int, err error)
 
 // Cap implements Container.Cap by forwarding the call to the internal "ImplCap".
 func (impl ContainerImpl[K, V]) Cap(ctx context.Context) (n int, err error)
+```
+
+#### Impl for Searcher
+```go
+// SearcherImpl lets you implement Searcher with a function. The call to Search
+// is simply forwarded to the internal function "Impl".
+type SearcherImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (r R, err error)
+}
+
+// Search implements Searcher.Search by forwarding the call to the internal "Impl".
+func (impl SearcherImpl[Q, R]) Search(ctx context.Context, filter Q) R, error) 
+```
+
+#### Impl for SearchUpdater
+```go
+// SearchUpdaterImpl lets you implement SearchUpdater with a function. The call
+// to SearchUpdate is simply forwarded to the internal function "Impl".
+type SearchUpdaterImpl[Q, U, R any] struct {
+	Impl func(ctx context.Context, filter Q, update U) (r R, err error)
+}
+
+// SearchUpdate implements SearchUpdater by forwarding to the internal "Impl".
+func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(ctx context.Context, filter Q, update U,) (r R, err error) 
+```
+
+#### Impl for SearchDeleter
+```go
+// SearchDeleterImpl lets you implement SearchDeleter with a function. The call
+// to SearchDelete is simply forwarded to the internal function "Impl".
+type SearchDeleterImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (q R, err error)
+}
+
+// SearchDelete implements SearchDeleter by forwarding to the internal "Impl".
+func (impl SearchDeleterImpl[Q, R]) SearchDelete(ctx context.Context, filter Q) (r R, err error)
 ```
 
 
