@@ -181,3 +181,82 @@ func (impl ContainerImpl[K, V]) Cap(
 
 	return impl.ImplCap(ctx)
 }
+
+// -----------------------------------------------------------------------------
+// Impl for Searcher
+// -----------------------------------------------------------------------------
+
+// SearcherImpl lets you implement Searcher with a function. The call to Search
+// is simply forwarded to the internal function "Impl".
+type SearcherImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (r R, err error)
+}
+
+// Search implements Searcher.Search by forwarding the call to the internal "Impl".
+func (impl SearcherImpl[Q, R]) Search(
+	ctx context.Context,
+	filter Q,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter)
+}
+
+// -----------------------------------------------------------------------------
+// Impl for SearchUpdater
+// -----------------------------------------------------------------------------
+
+// SearchUpdaterImpl lets you implement SearchUpdater with a function. The call
+// to SearchUpdate is simply forwarded to the internal function "Impl".
+type SearchUpdaterImpl[Q, U, R any] struct {
+	Impl func(ctx context.Context, filter Q, update U) (r R, err error)
+}
+
+// SearchUpdate implements SearchUpdater by forwarding to the internal "Impl".
+func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(
+	ctx context.Context,
+	filter Q,
+	update U,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter, update)
+}
+
+// -----------------------------------------------------------------------------
+// Impl for SearchDeleter
+// -----------------------------------------------------------------------------
+
+// SearchDeleterImpl lets you implement SearchDeleter with a function. The call
+// to SearchDelete is simply forwarded to the internal function "Impl".
+type SearchDeleterImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (q R, err error)
+}
+
+// SearchDelete implements SearchDeleter by forwarding to the internal "Impl".
+func (impl SearchDeleterImpl[Q, R]) SearchDelete(
+	ctx context.Context,
+	filter Q,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter)
+}
