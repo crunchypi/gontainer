@@ -12,58 +12,41 @@ Index
 ## Core interfaces
 Core interfaces are just CRUD operations & search-based operations.
 
-
-#### Putter
+#### Basic CRUD.
 ```go
 type Putter[K comparable, V any] interface {
 	Put(ctx context.Context, key K, val V) (err error)
 }
-```
 
-#### Getter
-```go
 type Getter[K comparable, V any] interface {
 	Get(ctx context.Context, key K) (val V, err error)
 }
-```
 
-#### Modifier
-```go
 type Modifier[K comparable, V any] interface {
 	Mod(ctx context.Context, key K, rcv func(v V) V) (err error)
 }
-```
 
-#### Deleter
-```go
 type Deleter[K comparable, V any] interface {
 	Del(ctx context.Context, key K) (val V, err error)
 }
 ```
 
-#### Searcher
+#### Searcher-based.
 ```go
 type Searcher[Q, R any] interface {
 	Search(ctx context.Context, filter Q) (r R, err error)
 }
-```
 
-#### SearchUpdater
-```go
 type SearchUpdater[Q, U, R any] interface {
 	SearchUpdate(ctx context.Context, filter Q, update U) (r R, err error)
 }
-```
 
-#### SearchDeleter
-
-```go
 type SearchDeleter[Q, R any] interface {
 	SearchDelete(ctx context.Context, filter Q) (r R, err error)
 }
 ```
 
-#### Container
+#### Composite/Container
 ```go
 type Container[K comparable, V any] interface {
 	Putter[K, V]
