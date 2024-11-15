@@ -80,7 +80,11 @@ var ErrImpl = errors.New("gontainer: used interface without an implementation")
 
 ## Impl pattern
 
-The impl pattern allows you to implement an interface in a functional way, avoiding the tedium of defining structs which implement small interfaces. You simply define a function with the right signature and place it inside an impl struct.
+The impl pattern allows you to implement an interface in a functional way, avoiding the tedium of defining structs which implement small interfaces. You simply define a function with the right signature and place it inside an impl struct. Here's a list of impl structs and how they can be used:
+- [gontainer.PutterImpl](https://go.dev/play/p/3QuCteK2sU6)
+- [gontainer.GetterImpl](https://go.dev/play/p/iNY6Lcf0Bmo)
+- [gontainer.ModifierImpl](https://go.dev/play/p/_zWjUTLFFwX)
+- [gontainer.DeleterImpl](https://go.dev/play/p/sEUi6zptniR)
 
 
 
