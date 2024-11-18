@@ -85,7 +85,9 @@ The impl pattern allows you to implement an interface in a functional way, avoid
 - [gontainer.GetterImpl](https://go.dev/play/p/iNY6Lcf0Bmo)
 - [gontainer.ModifierImpl](https://go.dev/play/p/_zWjUTLFFwX)
 - [gontainer.DeleterImpl](https://go.dev/play/p/sEUi6zptniR)
-
+* [gontainer.SearcherImpl](https://go.dev/play/p/KuzLaYVfYct)
+* [gontainer.SearchUpdaterImpl](https://go.dev/play/p/-9AdaI2w4GJ)
+* [gontainer.SearchDeleterImpl](https://go.dev/play/p/sJC4P3nR_ML)
 
 
 
