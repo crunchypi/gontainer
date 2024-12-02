@@ -13,6 +13,9 @@ var ErrImpl = errors.New("gontainer: used interface without an implementation")
 
 // PutterImpl lets you implement Putter with a function. The call to Put is
 // simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/3QuCteK2sU6
 type PutterImpl[K comparable, V any] struct {
 	Impl func(
 		ctx context.Context,
@@ -45,6 +48,9 @@ func (impl PutterImpl[K, V]) Put(
 
 // GetterImpl lets you implement Getter with a function. The call to Get is
 // simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/iNY6Lcf0Bmo
 type GetterImpl[K comparable, V any] struct {
 	Impl func(
 		ctx context.Context,
@@ -77,6 +83,9 @@ func (impl GetterImpl[K, V]) Get(
 
 // ModifierImpl lets you implement Modifier with a function. The call to Mod is
 // simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/_zWjUTLFFwX
 type ModifierImpl[K comparable, V any] struct {
 	Impl func(
 		ctx context.Context,
@@ -109,6 +118,9 @@ func (impl ModifierImpl[K, V]) Mod(
 
 // DeleterImpl lets you implement Deleter with a function. The call to Del is
 // simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/sEUi6zptniR
 type DeleterImpl[K comparable, V any] struct {
 	Impl func(
 		ctx context.Context,
@@ -142,6 +154,9 @@ func (impl DeleterImpl[K, V]) Del(
 // ContainerImpl lets you implement Container with functions. It groups
 // PutterImpl, GetterImpl, ModifierImpl and DeleterImpl, so docs for those may
 // be useful to read. Also, similarly you may implement the Len and Cap func.
+//
+// Example (interactive):
+//   - https://go.dev/play/p/QdFBbTL5v3_E
 type ContainerImpl[K comparable, V any] struct {
 	PutterImpl[K, V]
 	GetterImpl[K, V]
@@ -188,6 +203,9 @@ func (impl ContainerImpl[K, V]) Cap(
 
 // SearcherImpl lets you implement Searcher with a function. The call to Search
 // is simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/KuzLaYVfYct
 type SearcherImpl[Q, R any] struct {
 	Impl func(ctx context.Context, filter Q) (r R, err error)
 }
@@ -214,6 +232,9 @@ func (impl SearcherImpl[Q, R]) Search(
 
 // SearchUpdaterImpl lets you implement SearchUpdater with a function. The call
 // to SearchUpdate is simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/-9AdaI2w4GJ
 type SearchUpdaterImpl[Q, U, R any] struct {
 	Impl func(ctx context.Context, filter Q, update U) (r R, err error)
 }
@@ -241,6 +262,9 @@ func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(
 
 // SearchDeleterImpl lets you implement SearchDeleter with a function. The call
 // to SearchDelete is simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/sJC4P3nR_ML
 type SearchDeleterImpl[Q, R any] struct {
 	Impl func(ctx context.Context, filter Q) (q R, err error)
 }
