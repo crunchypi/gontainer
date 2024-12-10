@@ -5,7 +5,6 @@ import (
 	"errors"
 )
 
-var ErrPut = errors.New("gontainer: failed put")
 var ErrGet = errors.New("gontainer: failed get")
 var ErrMod = errors.New("gontainer: failed mod")
 var ErrDel = errors.New("gontainer: failed del")
@@ -13,11 +12,6 @@ var ErrDel = errors.New("gontainer: failed del")
 var ErrSearchFinder = errors.New("gontainer: failed search")
 var ErrSearchUpdater = errors.New("gontainer: failed search & update")
 var ErrSearchDeleter = errors.New("gontainer: failed search & update")
-
-// Putter represents something which stores a value.
-type Putter[K comparable, V any] interface {
-	Put(ctx context.Context, key K, val V) (err error)
-}
 
 // Getter represents someting which gets a stored value.
 type Getter[K comparable, V any] interface {
