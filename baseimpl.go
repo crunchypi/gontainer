@@ -5,41 +5,6 @@ import (
 )
 
 // -----------------------------------------------------------------------------
-// Impl for Getter.
-// -----------------------------------------------------------------------------
-
-// GetterImpl lets you implement Getter with a function. The call to Get is
-// simply forwarded to the internal function "Impl".
-//
-// Example (interactive):
-//   - https://go.dev/play/p/iNY6Lcf0Bmo
-type GetterImpl[K comparable, V any] struct {
-	Impl func(
-		ctx context.Context,
-		key K,
-	) (
-		val V,
-		err error,
-	)
-}
-
-// Get implements Getter by forwarding the call to the internal "Impl".
-func (impl GetterImpl[K, V]) Get(
-	ctx context.Context,
-	key K,
-) (
-	val V,
-	err error,
-) {
-	if impl.Impl == nil {
-		err = ErrImpl
-		return
-	}
-
-	return impl.Impl(ctx, key)
-}
-
-// -----------------------------------------------------------------------------
 // Impl for Modifier.
 // -----------------------------------------------------------------------------
 
