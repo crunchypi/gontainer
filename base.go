@@ -5,17 +5,11 @@ import (
 	"errors"
 )
 
-var ErrMod = errors.New("gontainer: failed mod")
 var ErrDel = errors.New("gontainer: failed del")
 
 var ErrSearchFinder = errors.New("gontainer: failed search")
 var ErrSearchUpdater = errors.New("gontainer: failed search & update")
 var ErrSearchDeleter = errors.New("gontainer: failed search & update")
-
-// Modifier represents something which modifies a stored value.
-type Modifier[K comparable, V any] interface {
-	Mod(ctx context.Context, key K, rcv func(v V) V) (err error)
-}
 
 // Deleter represents something which deletes a stored value.
 type Deleter[K comparable, V any] interface {

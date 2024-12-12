@@ -5,41 +5,6 @@ import (
 )
 
 // -----------------------------------------------------------------------------
-// Impl for Modifier.
-// -----------------------------------------------------------------------------
-
-// ModifierImpl lets you implement Modifier with a function. The call to Mod is
-// simply forwarded to the internal function "Impl".
-//
-// Example (interactive):
-//   - https://go.dev/play/p/_zWjUTLFFwX
-type ModifierImpl[K comparable, V any] struct {
-	Impl func(
-		ctx context.Context,
-		key K,
-		rcv func(v V) V,
-	) (
-		err error,
-	)
-}
-
-// Mod implements Modifier by forwarding the call to the internal "Impl".
-func (impl ModifierImpl[K, V]) Mod(
-	ctx context.Context,
-	key K,
-	rcv func(v V) V,
-) (
-	err error,
-) {
-	if impl.Impl == nil {
-		err = ErrImpl
-		return
-	}
-
-	return impl.Impl(ctx, key, rcv)
-}
-
-// -----------------------------------------------------------------------------
 // Impl for Deleter.
 // -----------------------------------------------------------------------------
 
