@@ -6,27 +6,6 @@ import (
 )
 
 // -----------------------------------------------------------------------------
-// Tests for DeleterImpl.
-// -----------------------------------------------------------------------------
-
-func TestDeleterImplIdeal(t *testing.T) {
-	d := DeleterImpl[int, int]{}
-	d.Impl = func(context.Context, int) (r int, err error) { r = 1; return }
-
-	val, err := d.Del(nil, 0)
-	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
-	assertEq("val", 1, val, func(s string) { t.Fatal(s) })
-}
-
-func TestDeleterImplWithNil(t *testing.T) {
-	d := DeleterImpl[int, int]{}
-
-	want := ErrImpl
-	_, have := d.Del(nil, 0)
-	assertEq("err", want, have, func(s string) { t.Fatal(s) })
-}
-
-// -----------------------------------------------------------------------------
 // Tests for ContainerImpl.
 // -----------------------------------------------------------------------------
 

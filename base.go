@@ -5,16 +5,9 @@ import (
 	"errors"
 )
 
-var ErrDel = errors.New("gontainer: failed del")
-
 var ErrSearchFinder = errors.New("gontainer: failed search")
 var ErrSearchUpdater = errors.New("gontainer: failed search & update")
 var ErrSearchDeleter = errors.New("gontainer: failed search & update")
-
-// Deleter represents something which deletes a stored value.
-type Deleter[K comparable, V any] interface {
-	Del(ctx context.Context, key K) (val V, err error)
-}
 
 // Container groups Putter, Getter, Modifier and Deleter. Additionally, it
 // also defines the expectation of Len and Cap.

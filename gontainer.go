@@ -12,6 +12,7 @@ import (
 var ErrPut = errors.New("gontainer: failed put")
 var ErrGet = errors.New("gontainer: failed get")
 var ErrMod = errors.New("gontainer: failed mod")
+var ErrDel = errors.New("gontainer: failed del")
 
 var ErrImpl = errors.New("gontainer: used interface without an implementation")
 
@@ -133,4 +134,44 @@ func (impl ModifierImpl[K, V]) Mod(
 	}
 
 	return impl.Impl(ctx, key, rcv)
+}
+
+// -----------------------------------------------------------------------------
+// Deleter.
+// -----------------------------------------------------------------------------
+
+// Deleter represents something which deletes a stored value.
+type Deleter[K comparable, V any] interface {
+	Del(ctx context.Context, key K) (val V, err error)
+}
+
+// DeleterImpl lets you implement Deleter with a function. The call to Del is
+// simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/sEUi6zptniR
+type DeleterImpl[K comparable, V any] struct {
+	Impl func(
+		ctx context.Context,
+		key K,
+	) (
+		val V,
+		err error,
+	)
+}
+
+// Del implements Deleter by forwarding the call to the internal "Impl".
+func (impl DeleterImpl[K, V]) Del(
+	ctx context.Context,
+	key K,
+) (
+	val V,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, key)
 }
