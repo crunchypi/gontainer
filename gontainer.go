@@ -14,6 +14,8 @@ var ErrGet = errors.New("gontainer: failed get")
 var ErrMod = errors.New("gontainer: failed mod")
 var ErrDel = errors.New("gontainer: failed del")
 
+var ErrSearcher = errors.New("gontainer: failed search")
+
 var ErrImpl = errors.New("gontainer: used interface without an implementation")
 
 // -----------------------------------------------------------------------------
@@ -174,4 +176,38 @@ func (impl DeleterImpl[K, V]) Del(
 	}
 
 	return impl.Impl(ctx, key)
+}
+
+// -----------------------------------------------------------------------------
+// Searcher
+// -----------------------------------------------------------------------------
+
+// Searcher represents something which searches for a value using a filter.
+type Searcher[Q, R any] interface {
+	Search(ctx context.Context, filter Q) (r R, err error)
+}
+
+// SearcherImpl lets you implement Searcher with a function. The call to Search
+// is simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/KuzLaYVfYct
+type SearcherImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (r R, err error)
+}
+
+// Search implements Searcher.Search by forwarding the call to the internal "Impl".
+func (impl SearcherImpl[Q, R]) Search(
+	ctx context.Context,
+	filter Q,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter)
 }

@@ -5,7 +5,6 @@ import (
 	"errors"
 )
 
-var ErrSearchFinder = errors.New("gontainer: failed search")
 var ErrSearchUpdater = errors.New("gontainer: failed search & update")
 var ErrSearchDeleter = errors.New("gontainer: failed search & update")
 
@@ -24,11 +23,6 @@ type Container[K comparable, V any] interface {
 // New returns a in-memory container, intended for prototyping and testing.
 func New[K comparable, V any]() Container[K, V] {
 	return make(mapWrap[K, V])
-}
-
-// Searcher represents something which searches for a value using a filter.
-type Searcher[Q, R any] interface {
-	Search(ctx context.Context, filter Q) (r R, err error)
 }
 
 // SearchUpdater represents something which searches and updates items.
