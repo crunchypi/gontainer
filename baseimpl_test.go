@@ -44,26 +44,6 @@ func TestContainerImplCapWithErr(t *testing.T) {
 }
 
 // -----------------------------------------------------------------------------
-// Tests for SearchUpdaterImpl.
-// -----------------------------------------------------------------------------
-
-func TestSearchUpdaterImplIdeal(t *testing.T) {
-	s := SearchUpdaterImpl[int, int, int]{}
-	s.Impl = func(_ context.Context, _, _ int) (r int, err error) { return }
-
-	val, err := s.SearchUpdate(nil, 0, 0)
-	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
-	assertEq("val", 0, val, func(s string) { t.Fatal(s) })
-}
-
-func TestSearchUpdaterImplWithNil(t *testing.T) {
-	s := SearchUpdaterImpl[int, int, int]{}
-
-	_, err := s.SearchUpdate(nil, 0, 0)
-	assertEq("err", ErrImpl, err, func(s string) { t.Fatal(s) })
-}
-
-// -----------------------------------------------------------------------------
 // Tests for SearchDeleterImpl.
 // -----------------------------------------------------------------------------
 

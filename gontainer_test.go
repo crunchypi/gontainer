@@ -130,3 +130,23 @@ func TestSearcherImplWithNil(t *testing.T) {
 	_, err := s.Search(context.Background(), 0)
 	assertEq("err", ErrImpl, err, func(s string) { t.Fatal(s) })
 }
+
+// -----------------------------------------------------------------------------
+// Tests for SearchUpdaterImpl.
+// -----------------------------------------------------------------------------
+
+func TestSearchUpdaterImplIdeal(t *testing.T) {
+	s := SearchUpdaterImpl[int, int, int]{}
+	s.Impl = func(_ context.Context, _, _ int) (r int, err error) { return }
+
+	val, err := s.SearchUpdate(context.Background(), 0, 0)
+	assertEq("err", *new(error), err, func(s string) { t.Fatal(s) })
+	assertEq("val", 0, val, func(s string) { t.Fatal(s) })
+}
+
+func TestSearchUpdaterImplWithNil(t *testing.T) {
+	s := SearchUpdaterImpl[int, int, int]{}
+
+	_, err := s.SearchUpdate(context.Background(), 0, 0)
+	assertEq("err", ErrImpl, err, func(s string) { t.Fatal(s) })
+}

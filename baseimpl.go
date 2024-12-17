@@ -55,36 +55,6 @@ func (impl ContainerImpl[K, V]) Cap(
 }
 
 // -----------------------------------------------------------------------------
-// Impl for SearchUpdater
-// -----------------------------------------------------------------------------
-
-// SearchUpdaterImpl lets you implement SearchUpdater with a function. The call
-// to SearchUpdate is simply forwarded to the internal function "Impl".
-//
-// Example (interactive):
-//   - https://go.dev/play/p/-9AdaI2w4GJ
-type SearchUpdaterImpl[Q, U, R any] struct {
-	Impl func(ctx context.Context, filter Q, update U) (r R, err error)
-}
-
-// SearchUpdate implements SearchUpdater by forwarding to the internal "Impl".
-func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(
-	ctx context.Context,
-	filter Q,
-	update U,
-) (
-	r R,
-	err error,
-) {
-	if impl.Impl == nil {
-		err = ErrImpl
-		return
-	}
-
-	return impl.Impl(ctx, filter, update)
-}
-
-// -----------------------------------------------------------------------------
 // Impl for SearchDeleter
 // -----------------------------------------------------------------------------
 
