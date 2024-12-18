@@ -16,6 +16,7 @@ var ErrDel = errors.New("gontainer: failed del")
 
 var ErrSearcher = errors.New("gontainer: failed search")
 var ErrSearchUpdater = errors.New("gontainer: failed search & update")
+var ErrSearchDeleter = errors.New("gontainer: failed search & update")
 
 var ErrImpl = errors.New("gontainer: used interface without an implementation")
 
@@ -246,4 +247,38 @@ func (impl SearchUpdaterImpl[Q, U, R]) SearchUpdate(
 	}
 
 	return impl.Impl(ctx, filter, update)
+}
+
+// -----------------------------------------------------------------------------
+// SearchDeleter
+// -----------------------------------------------------------------------------
+
+// SearchDeleter represents something which searches and deletes items.
+type SearchDeleter[Q, R any] interface {
+	SearchDelete(ctx context.Context, filter Q) (r R, err error)
+}
+
+// SearchDeleterImpl lets you implement SearchDeleter with a function. The call
+// to SearchDelete is simply forwarded to the internal function "Impl".
+//
+// Example (interactive):
+//   - https://go.dev/play/p/sJC4P3nR_ML
+type SearchDeleterImpl[Q, R any] struct {
+	Impl func(ctx context.Context, filter Q) (q R, err error)
+}
+
+// SearchDelete implements SearchDeleter by forwarding to the internal "Impl".
+func (impl SearchDeleterImpl[Q, R]) SearchDelete(
+	ctx context.Context,
+	filter Q,
+) (
+	r R,
+	err error,
+) {
+	if impl.Impl == nil {
+		err = ErrImpl
+		return
+	}
+
+	return impl.Impl(ctx, filter)
 }
